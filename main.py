@@ -211,23 +211,25 @@ while not exit_game:
                 else:
                     player.comparing(dealer.score)
                 if player.split:
-                    player.comparing(dealer.score, True, True)
-                else:
-                    player.comparing(dealer.score, False, True)
+                    if player.name == user_player.name:
+                        player.comparing(dealer.score, True, True)
+                    else:
+                        player.comparing(dealer.score, False, True)
         else:
             for player in players_wd:
                 if player.name == user_player.name:
-                    player.comparing(dealer.score, True)
+                    player.comparing(dealer.score, True, False, True)
                 else:
-                    player.comparing(dealer.score)
+                    player.comparing(dealer.score, False, False, True)
                 if player.split:
-                    player.comparing(dealer.score, True, True)
-                else:
-                    player.comparing(dealer.score, False, True)
+                    if player.name == user_player.name:
+                        player.comparing(dealer.score, True, True, True)
+                    else:
+                        player.comparing(dealer.score, False, True, True)
 
     for player in players_wd:
         if player.name == user_player.name:
-            player.print_dealer(False, False, True)
+            player.print_dealer(False, False, False)
         else:
             player.print_dealer()
     dealer.print_dealer(True, True)
@@ -260,19 +262,20 @@ while not exit_game:
         if player.name != dealer.name:
             player.insured = False
 
-    time.sleep(sleep_time)
-    print("\nDo you want to continue?\n"
-        "Y for YES\n"
-        "N for NO")
-    while True:
-        cont = input(": ")
-        if cont == 'Y' or cont == 'y':
-            break
-        elif cont == 'N' or cont == 'n':
-            exit_game = True
-            break
-        else:
-            print("Incorrect input. Please, enter a correct answer.")
+    if not exit_game:
+        time.sleep(sleep_time)
+        print("\nDo you want to continue?\n"
+              "Y for YES\n"
+              "N for NO")
+        while True:
+            cont = input(": ")
+            if cont == 'Y' or cont == 'y':
+                break
+            elif cont == 'N' or cont == 'n':
+                exit_game = True
+                break
+            else:
+                print("Incorrect input. Please, enter a correct answer.")
 
     time.sleep(sleep_time)
     if exit_game:

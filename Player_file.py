@@ -241,7 +241,7 @@ class Player(Gambler):
         self.bet += self.bet / 2
         self.insured = True
 
-    def comparing(self, dealer_score, user=False, split=False):
+    def comparing(self, dealer_score, user=False, split=False, dealer_bust=False):
         if split:
             bust = self.doublebust
             bet = self.doublebet
@@ -262,7 +262,11 @@ class Player(Gambler):
                 gain = bet
                 self.count_win(gain)
             else:
-                bust = True
+                if dealer_bust:
+                    gain = bet * 2
+                    self.count_win(gain)
+                else:
+                    bust = True
             time.sleep(delay)
             if user:
                 if bust:
