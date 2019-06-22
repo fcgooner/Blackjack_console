@@ -32,6 +32,7 @@ class Gambler(object):
         self.bet = 0
         self.doublebet = 0
         self.split = False
+        self.insured = False
 
     def count_scores(self, split=False):
         score = 0
@@ -199,12 +200,26 @@ class Gambler(object):
             else:
                 print(self.hand)
 
+    def clear_turn(self, dealer_name):
+            self.blackjack = False
+            self.hand = []
+            self.doublehand = []
+            self.score = 0
+            self.doublescore
+            self.bust = False
+            self.doublebust
+            self.init_count = True
+            self.bet = 0
+            self.doublebet
+            self.split = False
+            if self.name != dealer_name:
+                self.insured = False
+
 
 class Player(Gambler):
     def __init__(self, name):
         Gambler.__init__(self, name)
         self.money = 300.0
-        self.insured = False
 
     def place_bet(self, bet, uname="CPU"):
         time.sleep(delay)
@@ -291,4 +306,5 @@ class Player(Gambler):
             else:
                 print(self.name + " has lost " + str(bet) + "$.")
                 print(self.name + " has " + str(self.money) + "$ in total.")
+
 

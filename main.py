@@ -27,6 +27,15 @@ origin_deck = ["Ah", "Ad", "Ac", "As",
                "3h", "3d", "3c", "3s",
                "2h", "2d", "2c", "2s"]
 
+cpu_name_pool = ["John Marston", "Charles Smith", "Arthur Morgan"]
+cpu_pool = []       # cpu players pool
+players = []        # all players pool
+players_wd = []     # players pool without dealer
+input_error = "Incorrect value. Please, type the correct amount of CPU players." \
+              "\n 0 to play alone" \
+              "\n 1 for one CPU player" \
+              "\n 2 for two CPU players" \
+              "\n 3 for three CPU players."
 
 # initiate dealer and user objects
 dealer = Gambler("Dealer")
@@ -38,8 +47,10 @@ while True:
     elif len(user_player.name) < 2 or len(user_player.name) > 15:
         print("Your name has to be minimum 2 and maximum 15 characters long. Please, try again.")
     elif not user_player.name.isalpha():
-        print("Name must contain only letters. Please, try again")
+        print("Name must contain letters only. Please, try again.")
     else:
+        players.append(user_player)
+        players_wd.append(user_player)
         print("Hello, " + user_player.name + "!\n")
         time.sleep(sleep_time)
         break
@@ -50,35 +61,25 @@ while True:
                        "minimum 0 \n"
                        "maximum 3\n")
 
-    if num_of_cpu == "0":
-        players = [user_player, dealer]
-        players_wd = [user_player]
-        break
-    elif num_of_cpu == "1":
-        cpu_player1 = Player("John Marston")
-        players = [user_player, cpu_player1, dealer]
-        players_wd = [user_player, cpu_player1]
-        break
-    elif num_of_cpu == "2":
-        cpu_player1 = Player("John Marston")
-        cpu_player2 = Player("Charles Smith")
-        players = [user_player, cpu_player1, cpu_player2, dealer]
-        players_wd = [user_player, cpu_player1, cpu_player2]
-        break
-    elif num_of_cpu == "3":
-        cpu_player1 = Player("John Marston")
-        cpu_player2 = Player("Charles Smith")
-        cpu_player3 = Player("Sadie Adler")
-        players = [user_player, cpu_player1, cpu_player2, cpu_player3, dealer]
-        players_wd = [user_player, cpu_player1, cpu_player2, cpu_player3]
-        break
-    else:
-        time.sleep(sleep_time/2)
-        print("Incorrect value. Please, type the correct amount of CPU players. \n"
-              "0 to play alone \n"
-              "1 for one CPU player \n"
-              "2 for two CPU players \n"
-              "3 for three CPU players.")
+    try:
+        if 0 <= int(num_of_cpu) <= 3:
+            num_of_cpu = int(num_of_cpu)
+            # create cpu players
+            for cpu in range(0, num_of_cpu):
+                cpu_pool.append(Player(cpu_name_pool[cpu]))
+                players.append(cpu_pool[cpu])
+                players_wd.append(cpu_pool[cpu])
+            players.append(dealer)
+            break
+        else:
+            time.sleep(sleep_time / 2)
+            print(input_error)
+
+    # if user input contains non integers
+    except ValueError:
+        time.sleep(sleep_time / 2)
+        print(input_error)
+
 
 # START GAME
 play_deck = []
@@ -116,7 +117,7 @@ while not exit_game:
     for player in players:
         player.count_scores()
 
-    #print the table
+    # print the table
     for player in players_wd:
         if player.name == user_player.name:
             player.print_dealer(False, False, True)
@@ -146,8 +147,7 @@ while not exit_game:
                 pos_answer = random.randint(0, 100)
                 if pos_answer >= 80:
                     players_wd[i].insurance(user_player.name)
-
-    if dealer.hand[0] == "Ah" or dealer.hand[0] == "Ad" or dealer.hand[0] == "As" or dealer.hand[0] == "Ac":
+# if dealer.hand[0] == "Ah" or dealer.hand[0] == "Ad" or dealer.hand[0] == "As" or dealer.hand[0] == "Ac":
         if dealer.blackjack:
             time.sleep(sleep_time)
             print("Dealer has Blackjack!")
@@ -234,6 +234,7 @@ while not exit_game:
             player.print_dealer()
     dealer.print_dealer(True, True)
 
+#  check if player has money to continue
     for player in players_wd:
         if player.money == 0:
             time.sleep(sleep_time)
@@ -247,20 +248,11 @@ while not exit_game:
             del player
 
 # reset all attributes for new turn
+
     for player in players:
-        player.blackjack = False
-        player.hand = []
-        player.doublehand = []
-        player.score = 0
-        player.doublescore
-        player.bust = False
-        player.doublebust
-        player.init_count = True
-        player.bet = 0
-        player.doublebet
-        player.split = False
-        if player.name != dealer.name:
-            player.insured = False
+        player.clear_turn(dealer.name)
+
+# exit game check
 
     if not exit_game:
         time.sleep(sleep_time)
